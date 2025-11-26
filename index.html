@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buildrzbrain — Powered by Shazza</title>
+    <meta name="description" content="Buildrzbrain: a private Buildrzai environment powered by the Shazza agent." />
+
+    <style>
+        :root {
+            --bb-blue: #00aaff;     /* electric blue */
+            --bb-black: #050608;    /* deep black */
+            --bb-teal: #00ffd5;     /* neon teal */
+            --bb-gray: #121419;
+            --bb-gray-soft: #1c1f27;
+            --bb-white: #f5f7fb;
+            --bb-accent: #ffcc33;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #101522 0, #050608 55%, #020308 100%);
+            color: var(--bb-white);
+        }
+
+        header {
+            padding: 18px 24px;
+            border-bottom: 1px solid rgba(0, 255, 213, 0.25);
+            background: linear-gradient(90deg, rgba(0, 170, 255, 0.12), rgba(0, 255, 213, 0.04));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            font-size: 0.95rem;
+        }
+
+        .logo-mark {
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            background: radial-gradient(circle at 30% 0%, var(--bb-teal), var(--bb-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 900;
+            box-shadow: 0 0 18px rgba(0, 255, 213, 0.5);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .badge-private {
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 204, 51, 0.6);
+            background: rgba(255, 204, 51, 0.07);
+            color: var(--bb-accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        main {
+            max-width: 1080px;
+            margin: 40px auto;
+            padding: 0 16px 60px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+            gap: 32px;
+            align-items: center;
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hero-title {
+            font-size: clamp(2.2rem, 3vw, 3rem);
+            line-height: 1.1;
+            margin-bottom: 14px;
+        }
+
+        .hero-title span.highlight {
+            background: linear-gradient(120deg, var(--bb-teal), var(--bb-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 520px;
+            margin-bottom: 26px;
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(0, 255, 213, 0.5);
+            background: rgba(0, 255, 213, 0.05);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 14px;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn-primary, .btn-ghost {
+            border-radius: 999px;
+            padding: 9px 18px;
+            font-size: 0.9rem;
+            border: 1px solid transparent;
+            cursor: default; /* non-clickable placeholder */
+        }
+
+        .btn-primary {
+            background: linear-gradient(120deg, var(--bb-blue), var(--bb-teal));
+            border-color: rgba(0, 255, 213, 0.6);
+            color: #020308;
+            font-weight: 600;
+            box-shadow: 0 0 18px rgba(0, 255, 213, 0.45);
+        }
+
+        .btn-ghost {
+            background: rgba(15, 21, 35, 0.9);
+            border-color: rgba(0, 170, 255, 0.6);
+            color: var(--bb-white);
+        }
+
+        .note-banner {
+            margin-top: 14px;
+            font-size: 0.8rem;
+            opacity: 0.75;
+        }
+
+        .panel {
+            background: radial-gradient(circle at top left, rgba(0,255,213,0.06), rgba(10,12,20,0.98));
+            border-radius: 16px;
+            padding: 18px 18px 22px;
+            border: 1px solid rgba(0, 255, 213, 0.28);
+            box-shadow: 0 0 28px rgba(0, 255, 213, 0.18);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .panel-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.11em;
+            opacity: 0.9;
+        }
+
+        .shazza-chip {
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: rgba(0, 10, 20, 0.9);
+            border: 1px solid rgba(0, 170, 255, 0.65);
+            font-size: 0.8rem;
+        }
+
+        .log {
+            background: rgba(2, 4, 10, 0.92);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.8rem;
+            max-height: 260px;
+            overflow: auto;
+        }
+
+        .log-line {
+            margin: 3px 0;
+            opacity: 0.9;
+        }
+
+        .log-line .tag {
+            padding: 1px 8px;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-right: 6px;
+        }
+
+        .tag-sys {
+            background: rgba(0, 170, 255, 0.18);
+            color: var(--bb-blue);
+        }
+
+        .tag-agent {
+            background: rgba(0, 255, 213, 0.18);
+            color: var(--bb-teal);
+        }
+
+        .tag-admin {
+            background: rgba(255, 204, 51, 0.2);
+            color: var(--bb-accent);
+        }
+
+        .section-grid {
+            margin-top: 40px;
+            display: grid;
+            gap: 20px;
+        }
+
+        @media (min-width: 860px) {
+            .section-grid {
+                grid-template-columns: 2fr 1.3fr;
+            }
+        }
+
+        .card {
+            background: var(--bb-gray-soft);
+            border-radius: 14px;
+            padding: 16px 18px 18px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .card h2 {
+            margin: 0 0 10px;
+            font-size: 1rem;
+            color: var(--bb-teal);
+        }
+
+        .card p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.85;
+        }
+
+        .list {
+            margin-top: 10px;
+            padding-left: 18px;
+            font-size: 0.88rem;
+            opacity: 0.9;
+        }
+
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.04);
+            padding: 16px;
+            font-size: 0.8rem;
+            text-align: center;
+            opacity: 0.7;
+        }
+
+        a {
+            color: var(--bb-teal);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* NOTE: There is NO interactive login UI here on purpose.
+           Admin access is via GitHub authentication only for now. */
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo">
+        <div class="logo-mark">Bz</div>
+        <div>
+            BUILDZRBRAIN
+            <div style="font-size:0.68rem;opacity:0.7;text-transform:none;">
+                owned by Buildrzai • Agent: Shazza
+            </div>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="badge-private">PRIVATE PREVIEW</div>
+        <div>buildrzbrain.com (DNS-ready)</div>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div>
+            <div class="hero-pill">
+                <span>Shazza • Buildrzbrain private console</span>
+            </div>
+            <h1 class="hero-title">
+                Your <span class="highlight">Buildrzbrain</span> workspace,
+                powered by Shazza.
+            </h1>
+            <p class="hero-subtitle">
+                This is a private Buildrzbrain environment for Buildrzai.
+                The agent <strong>Shazza</strong> runs behind the scenes, while
+                you keep full backend access through your GitHub repository and hosting.
+            </p>
+
+            <div class="hero-actions">
+                <button class="btn-primary">
+                    Admin access via GitHub (Freddy3323)
+                </button>
+                <button class="btn-ghost">
+                    Frontend served at buildrzbrain.com (when DNS + Pages enabled)
+                </button>
+            </div>
+
+            <div class="note-banner">
+                To modify logic, routes, or backend behaviour:
+                edit your private repo
+                <code>shazzashagsmessagemind</code> as user
+                <strong>Freddy3323</strong>.
+            </div>
+        </div>
+
+        <aside class="panel">
+            <div class="panel-header">
+                <div class="panel-title">Shazza activity log (illustrative)</div>
+                <div class="shazza-chip">Agent: Shazza</div>
+            </div>
+            <div class="log">
+                <div class="log-line">
+                    <span class="tag tag-sys">SYSTEM</span>
+                    Buildrzbrain private environment initialised for Buildrzai.
+                </div>
+                <div class="log-line">
+                    <span class="tag tag-agent">SHAZZA</span>
+                    Listening for owner (Freddy3323) via GitHub commits &amp; pushes.
+                </div>
+                <div class="log-line">
+                    <span class="tag tag-admin">ADMIN</span>
+                    To update UI or flows, edit <code>index.html</code> in
+                    <code>shazzashagsmessagemind</code>.
+                </div>
+                <div class="log-line">
+                    <span class="tag tag-sys">SYSTEM</span>
+                    Domain target configured conceptually as: <code>buildrzbrain.com</code>.
+                    Point DNS&#8594;GitHub Pages when ready.
+                </div>
+                <div class="log-line">
+                    <span class="tag tag-agent">SHAZZA</span>
+                    No functionality changed by branding update. All backend access preserved.
+                </div>
+            </div>
+        </aside>
+    </section>
+
+    <section class="section-grid">
+        <article class="card">
+            <h2>How you log in (Admin)</h2>
+            <p>
+                Buildrzbrain is currently managed privately via GitHub.
+                Your <strong>GitHub account (Freddy3323)</strong> is the admin login.
+            </p>
+            <ul class="list">
+                <li>Repo: <code>shazzashagsmessagemind</code> (private)</li>
+                <li>Auth: GitHub secure login (no extra password in this UI)</li>
+                <li>Edit: open <code>index.html</code> in GitHub and commit changes</li>
+                <li>Shazza: referenced here as the Buildrzbrain agent only — no logic altered</li>
+            </ul>
+        </article>
+
+        <article class="card">
+            <h2>Connecting buildrzbrain.com</h2>
+            <p>
+                When you're ready to go live:
+            </p>
+            <ul class="list">
+                <li>Enable GitHub Pages on this repo (e.g. branch <code>main</code>).</li>
+                <li>At your domain registrar, add DNS records pointing <code>buildrzbrain.com</code> to GitHub Pages.</li>
+                <li>Keep the repo private until you're ready to expose the site or use an appropriate plan that supports private Pages.</li>
+            </ul>
+        </article>
+    </section>
+</main>
+
+<footer>
+    Buildrzbrain • owned by Buildrzai • Agent: Shazza • Deployed from private GitHub repo
+</footer>
+</body>
+</html>
