@@ -1,0 +1,17 @@
+name: Auto Sync to Cloudflare
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Trigger Cloudflare Deploy
+      run: |
+           "https://api.cloudflare.com/client/v4/accounts/4012cdcf45e6d9e7a4f09cdc5472bed7/pages/projects/buildrzbrain/deployments" \
+        -H "Authorization: Bearer dd93d2327dc7092425c089d7aca0ac97f1e6e"
